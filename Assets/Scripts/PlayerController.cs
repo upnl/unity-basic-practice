@@ -29,6 +29,10 @@ public class PlayerController : MonoBehaviour
         
         transform.Translate(movement * (speed * Time.deltaTime));
         
+        if (movement.magnitude >= 0.1f)
+            _animator.transform.rotation = 
+                Quaternion.Lerp(_animator.transform.rotation, Quaternion.LookRotation(movement), Time.deltaTime * 10f);
+        
         // TODO: _movementInput 을 이용하여 애니메이션을 적용해보자
         _animator.SetBool("IsMoving", _movementInput != Vector2.zero);
     }
