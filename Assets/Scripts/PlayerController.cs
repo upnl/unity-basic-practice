@@ -11,6 +11,8 @@ public class PlayerController : MonoBehaviour
     // private members
     private Vector2 _movementInput;
 
+    private bool _isGrounded;
+
     // components
     private Animator _animator;
     private Rigidbody _rigidbody;
@@ -23,7 +25,6 @@ public class PlayerController : MonoBehaviour
 
     private void Update()
     {
-        // TODO: _movementInput 을 이용하여 이동해보자
         Vector3 movement = new Vector3(_movementInput.x, 0, _movementInput.y);
         movement.Normalize();
         
@@ -33,8 +34,10 @@ public class PlayerController : MonoBehaviour
             _animator.transform.rotation = 
                 Quaternion.Lerp(_animator.transform.rotation, Quaternion.LookRotation(movement), Time.deltaTime * 10f);
         
-        // TODO: _movementInput 을 이용하여 애니메이션을 적용해보자
         _animator.SetBool("IsMoving", _movementInput != Vector2.zero);
+        
+        // TODO: _isGrounded 을 이용하여 애니메이션을 적용해보자
+        _animator.SetBool("IsGrounded", _isGrounded);
     }
     
     
@@ -43,9 +46,27 @@ public class PlayerController : MonoBehaviour
         _movementInput = value.Get<Vector2>();
     }
 
-    // TODO: Rigidbody 를 이용해서 Jump를 구현해보자
+    // TODO: _isGrounded 을 이용해 무한 점프를 방지
     private void OnJump()
     {
-        _rigidbody.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
+        if (_isGrounded)
+            _rigidbody.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
+    }
+    
+    // TODO: _isGrounded 로 상태 추적 (OnCollisionEnter, OnCollisionExit 을 이용해보자)
+    private void OnCollisionEnter(Collision other)
+    {
+        if (other.gameObject.CompareTag("Ground"))
+        {
+            _isGrounded = true;
+        }
+    }
+
+    private void OnCollisionExit(Collision other)
+    {
+        if (other.gameObject.CompareTag("Ground"))
+        {
+            _isGrounded = false;
+        }
     }
 }
