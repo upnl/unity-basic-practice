@@ -54,11 +54,17 @@ public class PlayerController : MonoBehaviour
     }
     
     // TODO: _isGrounded 로 상태 추적 (OnCollisionEnter, OnCollisionExit 을 이용해보자)
+    // TODO: Enemy 태그를 이용하여 간단한 게임 오버를 만들어보자
     private void OnCollisionEnter(Collision other)
     {
         if (other.gameObject.CompareTag("Ground"))
         {
             _isGrounded = true;
+        }
+        
+        if (other.gameObject.CompareTag("Enemy"))
+        {
+            GameManager.Instance.GameOver();
         }
     }
 
